@@ -1,7 +1,6 @@
 package com.udacity.webcrawler;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -27,12 +26,20 @@ final class WordCounts {
     static Map<String, Integer> sort(Map<String, Integer> wordCounts, int popularWordCount) {
 
         // TODO: Reimplement this method using only the Stream API and lambdas and/or method references.
-        WordCountComparator comparator = new WordCountComparator();
         return wordCounts.entrySet()
                 .parallelStream()
+                .sorted((o1, o2) -> {
+                    if (!o1.getValue().equals(o2.getValue())) {
+                        return o2.getValue() - o1.getValue();
+                    }
+                    if (o1.getKey().length() != o2.getKey().length()) {
+                        return o2.getKey().length() - o1.getKey().length();
+                    }
+                    return o1.getKey().compareTo(o2.getKey());
+                })
                 .limit(Math.min(popularWordCount, wordCounts.size()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (key, value) -> key, TreeMap::new));
+                        (key, value) -> key, LinkedHashMap::new));
 
 //        PriorityQueue<Map.Entry<String, Integer>> sortedCounts =
 //                new PriorityQueue<>(wordCounts.size(), new WordCountComparator());

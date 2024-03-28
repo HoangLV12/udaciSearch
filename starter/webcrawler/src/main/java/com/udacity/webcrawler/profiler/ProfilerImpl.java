@@ -64,8 +64,8 @@ final class ProfilerImpl implements Profiler {
         try (Writer writer = Files.newBufferedWriter(path)) {
             writeData(writer);
             writer.flush();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
